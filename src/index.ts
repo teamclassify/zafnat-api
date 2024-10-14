@@ -1,7 +1,7 @@
-const express = require("express");
-const cors = require("cors");
+import cors from "cors";
+import express from "express";
 
-const { PORT } = require("./config");
+import { PORT } from "./config";
 
 const app = express();
 
