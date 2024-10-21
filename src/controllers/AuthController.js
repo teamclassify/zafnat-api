@@ -1,5 +1,6 @@
 import ResponseDataBuilder from "../models/ResponseData.js";
 import AuthService from "../services/UserService.js";
+import validateBody from "../validators/validator.js";
 
 class AuthController {
   constructor() {
@@ -9,6 +10,20 @@ class AuthController {
   login = async (req, res) => {
     const id = req.id;
 
+    if (!id) {
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(401)
+        .setMsg("Unauthorized")
+        .build();
+
+      return res.json(data);
+    }
+
+    if (validateBody(req, res)) {
+      return;
+    }
+
     const user = await this.userService.findOne(id);
 
     if (user) {
@@ -17,7 +32,7 @@ class AuthController {
         .setData(user)
         .setStatus(200)
         .setMsg("User found")
-        .build()
+        .build();
 
       res.json(data);
     } else {
@@ -31,7 +46,7 @@ class AuthController {
         .setData(userCreated)
         .setStatus(201)
         .setMsg("User created")
-        .build()
+        .build();
 
       res.json(data);
     }
