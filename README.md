@@ -42,6 +42,15 @@ git push origin nombre-de-la-rama
 6. Esperar a que el pull request sea aprobado
 
 
+## Como crear un nuevo modelo
+
+1. Modificar el archivo `prisma/schema.prisma`
+2. Crear una migracion
+```bash
+npx prisma migrate dev --name nombre-de-la-migracion
+```
+3. Crear el servicio en `src/services` para hacer las operaciones con la base de datos
+
 ## Como crear un nuevo endpoint
 
 1. Crear un archivo en la carpeta `src/routes` con el nombre del recurso
@@ -53,6 +62,7 @@ git push origin nombre-de-la-rama
 7. Crear un archivo en la carpeta `src/services` con el nombre del recurso
 8. Crear las funciones necesarias
 9. Importar el archivo en el archivo de controladores
+
 
 ## Base de datos
 
