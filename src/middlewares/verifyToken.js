@@ -1,10 +1,17 @@
 import auth from "../config/firebase.js";
+import ResponseDataBuilder from "../models/ResponseData.js";
 
 const verifyToken = (req, res, next) => {
   let token = req.headers.authorization;
 
   if (!token || !token.split(" ")[1]) {
-    return res.status(401).json({ error: "token failed" });
+    const response = new ResponseDataBuilder()
+      .setStatus(401)
+      .setError("invalid token")
+      .setMsg("unauthorized")
+      .build();
+
+    return res.status(401).json(response);
   }
 
   token = token.split(" ")[1];
@@ -17,7 +24,13 @@ const verifyToken = (req, res, next) => {
       next();
     })
     .catch(() => {
-      return res.status(401).json({ error: "invalid token" });
+      const response = new ResponseDataBuilder()
+        .setStatus(401)
+        .setError("invalid token")
+        .setMsg("unauthorized")
+        .build();
+
+      return res.status(401).json(response);
     });
 };
 
