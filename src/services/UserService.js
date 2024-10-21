@@ -16,6 +16,9 @@ class UserService {
       where: {
         id: id,
       },
+      include: {
+        roles: true,
+      },
     });
 
     return user;
@@ -24,6 +27,28 @@ class UserService {
   async create(data) {
     const userCreated = await prisma.user.create({
       data,
+    });
+
+    const roleUser = await prisma.role.findFirst({
+      where: {
+        name: "user",
+      },
+    });
+
+    await prisma.usersOnRoles.create({
+      data: {
+        role: {
+          connect: {
+            id: roleUser.id,
+          },
+        },
+        user: {
+          connect: {
+            id: userCreated.id,
+          },
+        },
+        assignedBy: "system",
+      },
     });
 
     return userCreated;
