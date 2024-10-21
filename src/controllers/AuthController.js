@@ -38,8 +38,12 @@ class AuthController {
     } else {
       // create user in db and return it
       const userCreated = await this.userService.create({
-        ...req.body,
         id: id,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName ?? null,
+        email: req.body.email,
+        photo: req.body.photo ?? null,
+        phone: req.body.phone ?? null,
       });
 
       const data = new ResponseDataBuilder()
