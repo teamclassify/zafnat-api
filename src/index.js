@@ -19,7 +19,13 @@ app.get("/api", (_, res) => {
   res.json({ message: "Hello from server!" });
 });
 
+// ROUTES
 app.use("/api/auth", authRouter);
+
+// New routes
+// import nameRouter from "./routes/NameRouter.js";
+// app.use("/api/name-endpoint", nameRouter);
+
 
 app.listen(PORT, () => {
   console.log(`Server start with port ${PORT}`);
