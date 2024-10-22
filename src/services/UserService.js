@@ -6,6 +6,9 @@ class UserService {
   async find(where) {
     const users = await prisma.user.findMany({
       where,
+      include: {
+        roles: true,
+      },
     });
 
     return users;

@@ -55,6 +55,40 @@ class AuthController {
       res.json(data);
     }
   };
+
+  me = async (req, res) => {
+    const id = req.id;
+
+    if (!id) {
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(401)
+        .setMsg("Unauthorized")
+        .build();
+
+      return res.json(data);
+    }
+
+    const user = await this.userService.findOne(id);
+
+    if (user) {
+      const data = new ResponseDataBuilder()
+        .setData(user)
+        .setStatus(200)
+        .setMsg("User found")
+        .build();
+
+      res.json(data);
+    } else {
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(404)
+        .setMsg("User not found")
+        .build();
+
+      res.json(data);
+    }
+  };
 }
 
 export default AuthController;
