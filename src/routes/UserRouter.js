@@ -8,5 +8,6 @@ const controller = new UserController();
 
 userRouter.get("/", verifyToken, onlyAdmin, controller.findAll);
 userRouter.get("/:id", verifyToken, controller.findOne);
+userRouter.put("/set-role", verifyToken, onlyAdmin, controller.setRole);
 
 export default userRouter;
