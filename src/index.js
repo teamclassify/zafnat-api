@@ -5,6 +5,7 @@ import { PORT } from "./config/index.js";
 // routes
 import handleErrors from "./middlewares/handleErrors.js";
 import authRouter from "./routes/AuthRouter.js";
+import userRouter from "./routes/UserRouter.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get("/api", (_, res) => {
 
 // ROUTES
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
