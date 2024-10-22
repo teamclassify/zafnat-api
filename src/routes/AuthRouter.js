@@ -6,7 +6,7 @@ import { loginValidator } from "../validators/LoginValidator.js";
 const authRouter = express.Router();
 const controller = new AuthController();
 
-// router.get("/me", verifyToken, );
+authRouter.get("/me", verifyToken, controller.me);
 authRouter.post("/login", verifyToken, loginValidator, controller.login);
 
 export default authRouter;
