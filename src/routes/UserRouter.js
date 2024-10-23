@@ -7,7 +7,8 @@ const userRouter = express.Router();
 const controller = new UserController();
 
 userRouter.get("/", verifyToken, onlyAdmin, controller.findAll);
-userRouter.get("/:id", verifyToken, controller.findOne);
-userRouter.put("/set-role", verifyToken, onlyAdmin, controller.setRole);
+userRouter.get("/:id", verifyToken, onlyAdmin, controller.findOne);
+userRouter.post("/set-role", verifyToken, onlyAdmin, controller.setRole);
+userRouter.delete("/unset-role", verifyToken, onlyAdmin, controller.unsetRole);
 
 export default userRouter;

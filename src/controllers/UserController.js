@@ -10,21 +10,7 @@ class UserController {
   }
 
   findAll = async (req, res) => {
-
-    const isAdmin = await verifyIsAdmin(req, res);
-
-    if (!isAdmin) {
-      const data = new ResponseDataBuilder()
-        .setData(null)
-        .setStatus(401)
-        .setMsg("Unauthorized")
-        .build();
-
-      return res.json(data);
-    }
-
     const users = await this.userService.find({});
-
     const data = new ResponseDataBuilder()
       .setData(users)
       .setStatus(200)
@@ -35,18 +21,6 @@ class UserController {
   };
 
   findOne = async (req, res) => {
-    const isAdmin = await verifyIsAdmin(req, res);
-
-    if (!isAdmin) {
-      const data = new ResponseDataBuilder()
-        .setData(null)
-        .setStatus(401)
-        .setMsg("Unauthorized")
-        .build();
-
-      return res.json(data);
-    }
-
     const id = req.params.id;
 
     const user = await this.userService.findOne(id);
@@ -71,58 +45,80 @@ class UserController {
   }
 
   setRole = async (req, res) => {
-    const isAdmin = await verifyIsAdmin(req, res);
 
-    if (!isAdmin) {
+    const { userId, roleId } = req.body;
+
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
       const data = new ResponseDataBuilder()
         .setData(null)
-        .setStatus(401)
-        .setMsg("Unauthorized")
+        .setStatus(404)
+        .setMsg("User not found")
         .build();
 
       return res.json(data);
     }
-    const admin = await this.userService.findOne(req.id);
 
-    const { userId, currentRoleId, newRoleId } = req.body;
+    const userOnRole = await this.usersOnRolesService.findOne(userId, roleId);
 
-    if (!userId || !currentRoleId || !newRoleId) {
+    if (!userOnRole) {
+      const newUser = await this.usersOnRolesService.create({
+        userId,
+        roleId,
+        assignedBy: req.id,
+      });
+      const data = new ResponseDataBuilder()
+      .setData(newUser)
+      .setStatus(200)
+      .setMsg("Role set")
+      .build();
+      res.json(data);
+    }else{
       const data = new ResponseDataBuilder()
         .setData(null)
-        .setStatus(400)
-        .setMsg("Bad request")
+        .setStatus(409)
+        .setMsg("User already has this role")
         .build();
-
-      return res.json(data);
-    }
-    try{
-      const user = await this.usersOnRolesService.findOne(userId);
-
-      if (!user) {
-        const data = new ResponseDataBuilder()
-          .setData(null)
-          .setStatus(404)
-          .setMsg("User not found")
-          .build();
-
-        return res.json(data);
-      }else{
-        const userUpdated = await this.usersOnRolesService.update(userId, currentRoleId,{
-          roleId: newRoleId,
-          assignedBy: admin.email
-        });
-        const data = new ResponseDataBuilder()
-          .setData(userUpdated)
-          .setStatus(200)
-          .setMsg("Role set")
-          .build();
         res.json(data);
-      }
-    }catch(err){
+    }
+  }
+
+  unsetRole = async (req, res) => {
+    const { userId, roleId } = req.body;
+
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
       const data = new ResponseDataBuilder()
         .setData(null)
-        .setStatus(500)
-        .setMsg("Internal server error")
+        .setStatus(404)
+        .setMsg("User not found")
+        .build();
+
+      return res.json(data);
+    }
+
+    const userOnRole = await this.usersOnRolesService.findOne(userId, roleId);
+
+    if (!userOnRole) {
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(404)
+        .setMsg("User does not have this role")
+        .build();
+      res.json(data);
+    }else{
+      const deletedUser = await this.usersOnRolesService.delete({
+        userId_roleId: {
+          userId,
+          roleId,
+        },
+      });
+      const data = new ResponseDataBuilder()
+        .setData(deletedUser)
+        .setStatus(200)
+        .setMsg("Role unset")
         .build();
       res.json(data);
     }

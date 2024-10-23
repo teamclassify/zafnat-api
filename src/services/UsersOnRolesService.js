@@ -11,10 +11,11 @@ class UsersOnRolesService {
     return usersOnRoles;
   }
 
-  async findOne(userId) {
+  async findOne(userId, roleId) {
     const userOnRole = await prisma.usersOnRoles.findFirst({
       where: {
         userId,
+        roleId,
       },
     });
     return userOnRole;
@@ -28,25 +29,12 @@ class UsersOnRolesService {
     return userOnRoleCreated;
   }
 
-  async delete(id) {
+  async delete(userId_roleId) {
     const userOnRoleDeleted = await prisma.usersOnRoles.delete({
-      where: id,
+      where: userId_roleId,
     });
 
     return userOnRoleDeleted;
-  }
-
-  async update(userId, currentRoleId, data) {
-    const userOnRoleUpdated = await prisma.usersOnRoles.update({
-      where: {
-        userId_roleId: {
-          userId: userId,
-          roleId: currentRoleId,
-        },
-      },
-      data,
-    });
-    return userOnRoleUpdated;
   }
 }
 
