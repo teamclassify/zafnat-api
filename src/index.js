@@ -23,7 +23,7 @@ app.get("/api", (_, res) => {
 
 // ROUTES
 app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
