@@ -66,6 +66,16 @@ class UserService {
 
     return { deleted: true };
   }
+
+  async update(id, data) {
+    const userUpdated = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data,
+    });
+    return userUpdated;
+  }
 }
 
 export default UserService;

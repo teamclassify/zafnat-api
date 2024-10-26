@@ -161,6 +161,43 @@ class UserController {
 
     res.json(data);
   };
+
+  update = async (req, res) => {
+    const id = req.id;
+
+    if (!id) {
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(401)
+        .setMsg("Unauthorized")
+        .build();
+
+      return res.json(data);
+    }
+
+    const user = await this.userService.findOne(id);
+
+    if (!user) {
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(404)
+        .setMsg("User not found")
+        .build();
+
+      return res.json(data);
+    }
+    const updatedUser = await this.userService.update(id, {
+      ...req.body,
+    });
+
+    const data = new ResponseDataBuilder()
+      .setData(updatedUser)
+      .setStatus(200)
+      .setMsg("User updated")
+      .build();
+
+    res.json(data);
+  };
 }
 
 export default UserController;
