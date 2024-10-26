@@ -8,6 +8,7 @@ class UserService {
       where,
       include: {
         roles: true,
+        addresses: true,
       },
     });
 
@@ -21,6 +22,7 @@ class UserService {
       },
       include: {
         roles: true,
+        addresses: true,
       },
     });
 
