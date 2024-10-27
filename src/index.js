@@ -8,6 +8,7 @@ import authRouter from "./routes/AuthRouter.js";
 import userRouter from "./routes/UserRouter.js";
 import addressRouter from "./routes/AddressRouter.js";
 import socialMediaRouter from "./routes/SocialMediaRouter.js";
+import fileRouter from "./routes/FileRouter.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/social-media", socialMediaRouter);
+app.use("/api/file", fileRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
