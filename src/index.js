@@ -7,6 +7,7 @@ import handleErrors from "./middlewares/handleErrors.js";
 import authRouter from "./routes/AuthRouter.js";
 import userRouter from "./routes/UserRouter.js";
 import addressRouter from "./routes/AddressRouter.js";
+import socialMediaRouter from "./routes/SocialMediaRouter.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.get("/api", (_, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/address", addressRouter);
+app.use("/api/social-media", socialMediaRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
