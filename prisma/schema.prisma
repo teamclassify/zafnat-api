@@ -23,6 +23,7 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   roles UsersOnRoles[]
+  addresses Address[]
 }
 
 model UsersOnRoles {
@@ -34,4 +35,23 @@ model UsersOnRoles {
   assignedBy String
 
   @@id([userId, roleId])
+}
+
+model Address {
+  id           Int           @id @default(autoincrement())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  title        String
+  address_line_1 String
+  address_line_2 String?
+  country      String
+  city         String
+  postal_code  String
+  createdAt    DateTime      @default(now())
+}
+
+model SocialMedia {
+  id           Int           @id @default(autoincrement())
+  name         String
+  status       Boolean       @default(false)
 }

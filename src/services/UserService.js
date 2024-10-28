@@ -8,6 +8,7 @@ class UserService {
       where,
       include: {
         roles: true,
+        addresses: true,
       },
     });
 
@@ -21,6 +22,7 @@ class UserService {
       },
       include: {
         roles: true,
+        addresses: true,
       },
     });
 
@@ -65,6 +67,16 @@ class UserService {
     console.log(userDeleted);
 
     return { deleted: true };
+  }
+
+  async update(id, data) {
+    const userUpdated = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data,
+    });
+    return userUpdated;
   }
 }
 
