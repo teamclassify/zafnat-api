@@ -25,7 +25,7 @@ app.get("/api", (_, res) => {
 
 // ROUTES
 app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/social-media", socialMediaRouter);
 
