@@ -4,19 +4,23 @@ class ReviewController {
     constructor() {
         this.reviewService = new ReviewService();
     }
-    
-    findByUser = async (req, res) => {
-        const reviews = await this.reviewService.find({
-            userId: req.id,
-        });
+
+    findAll = async (req, res) => {
+        const reviews = await this.reviewService.find({});
         res.status(200).json(reviews);
+    };
+    
+    findOne = async (req, res) => {
+        const id = req.params.id;
+        const review = await this.reviewService.findOne(id);
+        res.status(200).json(review);
     };
 
     create = async (req, res) => {
         const data = req.body;
     
         const review = await this.reviewService.create(data);
-    
+
         res.status(201).json(review);
     };
     
