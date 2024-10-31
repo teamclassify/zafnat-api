@@ -24,6 +24,7 @@ model User {
   updatedAt    DateTime       @updatedAt
   roles UsersOnRoles[]
   addresses Address[]
+  productionOrders ProductionOrder[]
 }
 
 model UsersOnRoles {
@@ -48,6 +49,81 @@ model Address {
   city         String
   postal_code  String
   createdAt    DateTime      @default(now())
+}
+
+model ProductionOrder {
+  id           Int           @id @default(autoincrement())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  prod_id      String
+  createdAt    DateTime      @default(now())
+  products ProductOnProductionOrder[]
+}
+
+model ProductOnProductionOrder {
+  id           Int           @id @default(autoincrement())
+  production_id Int
+  productionOrder ProductionOrder @relation(fields: [production_id], references: [id])
+  quantity     Int
+  price        Float
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  parent_id    Int?
+  createdAt    DateTime      @default(now())
+  products ProductOnCategory[]
+}
+
+model ProductOnCategory {
+  id           Int           @id @default(autoincrement())
+  category_id  Int
+  category     Category      @relation(fields: [category_id], references: [id])
+  product_id   Int
+  product      Product       @relation(fields: [product_id], references: [id])
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  status       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  categories ProductOnCategory[]
+  skus ProductSku[]
+}
+
+model ProductSku {
+  id           Int           @id @default(autoincrement())
+  product_id   Int
+  product      Product       @relation(fields: [product_id], references: [id])
+  size_attribute_id Int
+  size_attribute ProductAttribute @relation("ProductSize", fields: [size_attribute_id], references: [id])
+  color_attribute_id Int
+  color_attribute ProductAttribute @relation("ProductColor", fields: [color_attribute_id], references: [id])
+  sku          String
+  price        Float
+  quantity        Int
+  createdAt    DateTime      @default(now())
+  photos ProductPhoto[]
+}
+
+model ProductAttribute {
+  id           Int           @id @default(autoincrement())
+  type         String
+  value        String
+  createdAt    DateTime      @default(now())
+  productSizes ProductSku[] @relation("ProductSize")
+  productColors ProductSku[] @relation("ProductColor")
+}
+
+model ProductPhoto {
+  id           Int           @id @default(autoincrement())
+  product_id   Int
+  product      ProductSku    @relation(fields: [product_id], references: [id])
+  value        String
 }
 
 model SocialMedia {
