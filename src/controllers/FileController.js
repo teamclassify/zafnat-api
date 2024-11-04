@@ -17,12 +17,12 @@ class FileController {
             .build();
     
         return res.json(data);
-        }
+    }
     
         const excelData = excelToJson(file);
-        this.fileService.create(excelData);
+        const result = this.fileService.create(excelData);
         const data = new ResponseDataBuilder()
-        .setData(excelData)
+        .setData(result)
         .setStatus(200)
         .setMsg("File uploaded")
         .build();

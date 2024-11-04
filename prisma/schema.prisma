@@ -65,13 +65,15 @@ model ProductOnProductionOrder {
   id           Int           @id @default(autoincrement())
   production_id Int
   productionOrder ProductionOrder @relation(fields: [production_id], references: [id])
+  product_id   Int
+  product      ProductSku    @relation(fields: [product_id], references: [id])
   quantity     Int
   price        Float
 }
 
 model Category {
   id           Int           @id @default(autoincrement())
-  name         String
+  name         String        @unique
   description  String?
   parent_id    Int?
   createdAt    DateTime      @default(now())
@@ -90,7 +92,7 @@ model ProductOnCategory {
 
 model Product {
   id           Int           @id @default(autoincrement())
-  name         String
+  name         String        @unique
   description  String?
   status       Boolean       @default(true)
   createdAt    DateTime      @default(now())
@@ -106,11 +108,12 @@ model ProductSku {
   size_attribute ProductAttribute @relation("ProductSize", fields: [size_attribute_id], references: [id])
   color_attribute_id Int
   color_attribute ProductAttribute @relation("ProductColor", fields: [color_attribute_id], references: [id])
-  sku          String
+  sku          String        @unique
   price        Float
   quantity        Int
   createdAt    DateTime      @default(now())
   photos ProductPhoto[]
+  orders ProductOnProductionOrder[]
 }
 
 model ProductAttribute {
