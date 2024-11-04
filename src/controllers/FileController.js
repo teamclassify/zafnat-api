@@ -1,9 +1,10 @@
 import excelToJson from "../utils/excelToJson.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
+import FileService from "../services/FileService.js";
 
 class FileController {
     constructor() {
-        //this.fileService = new FileService();
+        this.fileService = new FileService();
     }
     
     upload = async (req, res) => {
@@ -19,7 +20,7 @@ class FileController {
         }
     
         const excelData = excelToJson(file);
-    
+        this.fileService.create(excelData);
         const data = new ResponseDataBuilder()
         .setData(excelData)
         .setStatus(200)

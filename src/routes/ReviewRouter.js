@@ -1,5 +1,5 @@
 import express from "express";
-import ReviewController from "../controllers/ReviewController";
+import ReviewController from "../controllers/ReviewController.js";
 import verifyToken from '../middlewares/verifyToken.js';
 
 

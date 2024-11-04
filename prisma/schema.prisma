@@ -56,7 +56,7 @@ model ProductionOrder {
   id           Int           @id @default(autoincrement())
   userId       String
   user         User          @relation(fields: [userId], references: [id])
-  prod_id      String
+  prod_id      String        @unique
   createdAt    DateTime      @default(now())
   products ProductOnProductionOrder[]
 }
@@ -84,6 +84,8 @@ model ProductOnCategory {
   category     Category      @relation(fields: [category_id], references: [id])
   product_id   Int
   product      Product       @relation(fields: [product_id], references: [id])
+  name         String        @unique
+  skus ProductSku[]
 }
 
 model Product {
@@ -93,14 +95,13 @@ model Product {
   status       Boolean       @default(true)
   createdAt    DateTime      @default(now())
   categories ProductOnCategory[]
-  skus ProductSku[]
   reviews Review[]
 }
 
 model ProductSku {
   id           Int           @id @default(autoincrement())
   product_id   Int
-  product      Product       @relation(fields: [product_id], references: [id])
+  product      ProductOnCategory      @relation(fields: [product_id], references: [id])
   size_attribute_id Int
   size_attribute ProductAttribute @relation("ProductSize", fields: [size_attribute_id], references: [id])
   color_attribute_id Int
@@ -115,7 +116,7 @@ model ProductSku {
 model ProductAttribute {
   id           Int           @id @default(autoincrement())
   type         String
-  value        String
+  value        String        @unique
   createdAt    DateTime      @default(now())
   productSizes ProductSku[] @relation("ProductSize")
   productColors ProductSku[] @relation("ProductColor")
