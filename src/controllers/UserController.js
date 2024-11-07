@@ -2,11 +2,13 @@ import UserService from "../services/UserService.js";
 import UsersOnRolesService from "../services/UsersOnRolesService.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
 import verifyIsAdmin from "../utils/verifyIsAdmin.js";
+import RoleService from "../services/RoleService.js";
 
 class UserController {
   constructor() {
     this.userService = new UserService();
     this.usersOnRolesService = new UsersOnRolesService();
+    this.roleService = new RoleService();
   }
 
   findAll = async (req, res) => {
@@ -17,7 +19,7 @@ class UserController {
       .setMsg("Users found")
       .build();
 
-    res.json(data);
+    return res.json(data);
   };
 
   findOne = async (req, res) => {
@@ -41,7 +43,7 @@ class UserController {
       .setMsg("User found")
       .build();
 
-    res.json(data);
+    return res.json(data);
   }
 
   setRole = async (req, res) => {
@@ -73,14 +75,15 @@ class UserController {
       .setStatus(200)
       .setMsg("Role set")
       .build();
-      res.json(data);
+      return res.json(data);
     }else{
       const data = new ResponseDataBuilder()
         .setData(null)
         .setStatus(409)
         .setMsg("User already has this role")
         .build();
-        res.json(data);
+      
+        return res.json(data);
     }
   }
 
@@ -107,7 +110,7 @@ class UserController {
         .setStatus(404)
         .setMsg("User does not have this role")
         .build();
-      res.json(data);
+      return res.json(data);
     }else{
       const deletedUser = await this.usersOnRolesService.delete({
         userId_roleId: {
@@ -120,7 +123,8 @@ class UserController {
         .setStatus(200)
         .setMsg("Role unset")
         .build();
-      res.json(data);
+      
+      return res.json(data);
     }
   }
 
@@ -159,7 +163,7 @@ class UserController {
       .setMsg("User deleted")
       .build();
 
-    res.json(data);
+    return res.json(data);
   };
 
   update = async (req, res) => {
@@ -196,7 +200,21 @@ class UserController {
       .setMsg("User updated")
       .build();
 
-    res.json(data);
+    return res.json(data);
+  };
+  
+  getRoles = async (req, res) => {
+    const roles = await this.roleService.find({});
+      
+    console.log(roles)
+    
+    const data = new ResponseDataBuilder()
+      .setData(roles)
+      .setStatus(200)
+      .setMsg("Roles found")
+      .build();
+
+    return res.json(data);
   };
 }
 

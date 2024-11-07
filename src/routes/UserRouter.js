@@ -6,6 +6,7 @@ const userRouter = express.Router();
 const controller = new UserController();
 
 userRouter.get("/", verifyToken, controller.findAll);
+userRouter.get("/roles", verifyToken, controller.getRoles);
 userRouter.get("/:id", verifyToken, controller.findOne);
 userRouter.post("/set-role", verifyToken, controller.setRole);
 userRouter.put("/update-profile", verifyToken, controller.update);
