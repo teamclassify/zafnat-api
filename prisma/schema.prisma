@@ -114,6 +114,7 @@ model ProductSku {
   createdAt    DateTime      @default(now())
   photos ProductPhoto[]
   orders ProductOnProductionOrder[]
+  cart_products CartProduct[]
 }
 
 model ProductAttribute {
@@ -148,4 +149,21 @@ model Review {
   description  String?        
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+}
+
+model Cart {
+  id           Int           @id @default(autoincrement())
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String
+  products     CartProduct[]          
+}
+
+model CartProduct {
+  id           Int           @id @default(autoincrement())
+  product_sku  ProductSku    @relation(fields: [product_sku_id], references: [id])
+  product_sku_id Int
+  cart         Cart          @relation(fields: [cart_id], references: [id])
+  cart_id      Int            
+  quantity     Int
+
 }
