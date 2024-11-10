@@ -12,7 +12,27 @@ class UserController {
   }
 
   findAll = async (req, res) => {
-    const users = await this.userService.find({});
+    const roles = req.query.roles.split(",").filter(r => r!=='') ?? []
+    let query = {}
+    
+    if(roles.length > 0){
+      query = {
+        roles: {
+          some: {
+            role: {
+              name: {
+                in: roles,
+              },
+            },
+          },
+        },
+      }
+    }
+    
+    const users = await this.userService.find({
+      ...query
+    });
+    
     const data = new ResponseDataBuilder()
       .setData(users)
       .setStatus(200)
