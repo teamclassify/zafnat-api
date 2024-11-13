@@ -10,6 +10,7 @@ import addressRouter from "./routes/AddressRouter.js";
 import socialMediaRouter from "./routes/SocialMediaRouter.js";
 import fileRouter from "./routes/FileRouter.js";
 import reviewRouter from "./routes/ReviewRouter.js";
+import cartProductRouter from "./routes/CartProductRouter.js";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/address", addressRouter);
 app.use("/api/social-media", socialMediaRouter);
 app.use("/api/file", fileRouter);
 app.use("/api/review", reviewRouter);
+app.use("/api/cart-product", cartProductRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
