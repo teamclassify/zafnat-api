@@ -8,25 +8,26 @@ datasource db {
 }
 
 model Role {
-  id           Int           @id @default(autoincrement())
-  name         String
+  id    Int            @id @default(autoincrement())
+  name  String
   users UsersOnRoles[]
 }
 
 model User {
-  id           String         @id
-  email        String         @unique
-  firstName    String?
-  lastName     String?
-  phone        String?
-  photo        String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  roles        UsersOnRoles[]
-  addresses    Address[]
-  reviews      Review[]
+  id               String            @id
+  email            String            @unique
+  firstName        String?
+  lastName         String?
+  phone            String?
+  photo            String?
+  gender           String?           @default("na")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  roles            UsersOnRoles[]
+  addresses        Address[]
+  reviews          Review[]
   productionOrders ProductionOrder[]
-  cart         Cart?
+  cart             Cart?
 }
 
 model UsersOnRoles {
@@ -41,130 +42,129 @@ model UsersOnRoles {
 }
 
 model Address {
-  id           Int           @id @default(autoincrement())
-  userId       String
-  user         User          @relation(fields: [userId], references: [id])
-  title        String
+  id             Int      @id @default(autoincrement())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  title          String
   address_line_1 String
   address_line_2 String?
-  country      String
-  city         String
-  postal_code  String
-  createdAt    DateTime      @default(now())
+  country        String
+  city           String
+  postal_code    String
+  createdAt      DateTime @default(now())
 }
 
 model ProductionOrder {
-  id           Int           @id @default(autoincrement())
-  userId       String
-  user         User          @relation(fields: [userId], references: [id])
-  prod_id      String        @unique
-  createdAt    DateTime      @default(now())
-  products ProductOnProductionOrder[]
+  id        Int                        @id @default(autoincrement())
+  userId    String
+  user      User                       @relation(fields: [userId], references: [id])
+  prod_id   String                     @unique
+  createdAt DateTime                   @default(now())
+  products  ProductOnProductionOrder[]
 }
 
 model ProductOnProductionOrder {
-  id           Int           @id @default(autoincrement())
-  production_id Int
+  id              Int             @id @default(autoincrement())
+  production_id   Int
   productionOrder ProductionOrder @relation(fields: [production_id], references: [id])
-  product_id   Int
-  product      ProductSku    @relation(fields: [product_id], references: [id])
-  quantity     Int
-  price        Float
+  product_id      Int
+  product         ProductSku      @relation(fields: [product_id], references: [id])
+  quantity        Int
+  price           Float
 }
 
 model Category {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  description  String?
-  parent_id    Int?
-  createdAt    DateTime      @default(now())
-  products ProductOnCategory[]
+  id          Int                 @id @default(autoincrement())
+  name        String              @unique
+  description String?
+  parent_id   Int?
+  createdAt   DateTime            @default(now())
+  products    ProductOnCategory[]
 }
 
 model ProductOnCategory {
-  id           Int           @id @default(autoincrement())
-  category_id  Int
-  category     Category      @relation(fields: [category_id], references: [id])
-  product_id   Int
-  product      Product       @relation(fields: [product_id], references: [id])
-  name         String        @unique
-  skus ProductSku[]
+  id          Int          @id @default(autoincrement())
+  category_id Int
+  category    Category     @relation(fields: [category_id], references: [id])
+  product_id  Int
+  product     Product      @relation(fields: [product_id], references: [id])
+  name        String       @unique
+  skus        ProductSku[]
 }
 
 model Product {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  description  String?
-  status       Boolean       @default(true)
-  createdAt    DateTime      @default(now())
-  categories ProductOnCategory[]
-  reviews Review[]
+  id          Int                 @id @default(autoincrement())
+  name        String              @unique
+  description String?
+  status      Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  categories  ProductOnCategory[]
+  reviews     Review[]
 }
 
 model ProductSku {
-  id           Int           @id @default(autoincrement())
-  product_id   Int
-  product      ProductOnCategory      @relation(fields: [product_id], references: [id])
-  size_attribute_id Int
-  size_attribute ProductAttribute @relation("ProductSize", fields: [size_attribute_id], references: [id])
+  id                 Int                        @id @default(autoincrement())
+  product_id         Int
+  product            ProductOnCategory          @relation(fields: [product_id], references: [id])
+  size_attribute_id  Int
+  size_attribute     ProductAttribute           @relation("ProductSize", fields: [size_attribute_id], references: [id])
   color_attribute_id Int
-  color_attribute ProductAttribute @relation("ProductColor", fields: [color_attribute_id], references: [id])
-  sku          String        @unique
-  price        Float
-  quantity        Int
-  createdAt    DateTime      @default(now())
-  photos ProductPhoto[]
-  orders ProductOnProductionOrder[]
-  cart_product CartProduct?
+  color_attribute    ProductAttribute           @relation("ProductColor", fields: [color_attribute_id], references: [id])
+  sku                String                     @unique
+  price              Float
+  quantity           Int
+  createdAt          DateTime                   @default(now())
+  photos             ProductPhoto[]
+  orders             ProductOnProductionOrder[]
+  cart_product       CartProduct?
 }
 
 model ProductAttribute {
-  id           Int           @id @default(autoincrement())
-  type         String
-  value        String        @unique
-  createdAt    DateTime      @default(now())
-  productSizes ProductSku[] @relation("ProductSize")
+  id            Int          @id @default(autoincrement())
+  type          String
+  value         String       @unique
+  createdAt     DateTime     @default(now())
+  productSizes  ProductSku[] @relation("ProductSize")
   productColors ProductSku[] @relation("ProductColor")
 }
 
 model ProductPhoto {
-  id           Int           @id @default(autoincrement())
-  product_id   Int
-  product      ProductSku    @relation(fields: [product_id], references: [id])
-  value        String
+  id         Int        @id @default(autoincrement())
+  product_id Int
+  product    ProductSku @relation(fields: [product_id], references: [id])
+  value      String
 }
 
 model SocialMedia {
-  id           Int           @id @default(autoincrement())
-  name         String
-  status       Boolean       @default(false)
+  id     Int     @id @default(autoincrement())
+  name   String
+  status Boolean @default(false)
 }
 
 model Review {
-  id           Int           @id @default(autoincrement())
-  user         User          @relation(fields: [userId], references: [id])
-  userId       String
-  product      Product       @relation(fields: [productId], references: [id])
-  productId    Int
-  rating       Int           
-  description  String?        
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+  rating      Int
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Cart {
-  id           Int           @id @default(autoincrement())
-  user         User          @relation(fields: [userId], references: [id])
-  userId       String        @unique
-  products     CartProduct[]        
+  id       Int           @id @default(autoincrement())
+  user     User          @relation(fields: [userId], references: [id])
+  userId   String        @unique
+  products CartProduct[]
 }
 
 model CartProduct {
-  id           Int           @id @default(autoincrement())
-  product_sku  ProductSku    @relation(fields: [product_sku_id], references: [id])
-  product_sku_id Int         @unique
-  cart         Cart          @relation(fields: [cart_id], references: [id])
-  cart_id      Int            
-  quantity     Int
-
+  id             Int        @id @default(autoincrement())
+  product_sku    ProductSku @relation(fields: [product_sku_id], references: [id])
+  product_sku_id Int        @unique
+  cart           Cart       @relation(fields: [cart_id], references: [id])
+  cart_id        Int
+  quantity       Int
 }
