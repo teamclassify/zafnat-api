@@ -201,7 +201,7 @@ class UserController {
 
     const user = await this.userService.findOne(id);
 
-    if (!user) {
+    if (!user || user?.id !== id) {
       const data = new ResponseDataBuilder()
         .setData(null)
         .setStatus(404)
@@ -210,6 +210,7 @@ class UserController {
 
       return res.json(data);
     }
+    
     const updatedUser = await this.userService.update(id, {
       ...req.body,
     });
