@@ -1,13 +1,13 @@
 const ROLES = {
-  ADMIN: 0,
-  SALES: 1,
+  ADMIN: 1,
+  SALES: 3,
   USER: 2,
 };
 
 function checkPermission(role) {
   return (req, res, next) => {
-    const userRole = req.user ? req.user.roles : "anonymous";
-
+    const userRole = req.user ? req.user.roles.map(r => r.roleId) : [];
+    
     if (userRole.includes(ROLES[role])) {
       return next();
     } else {
