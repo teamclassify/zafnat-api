@@ -44,6 +44,7 @@ class AuthController {
         email: req.body.email,
         photo: req.body.photo ?? null,
         phone: req.body.phone ?? null,
+        gender: "na",
       });
 
       const data = new ResponseDataBuilder()
