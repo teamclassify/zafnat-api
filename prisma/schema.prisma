@@ -100,26 +100,23 @@ model Product {
   createdAt   DateTime            @default(now())
   categories  ProductOnCategory[]
   reviews     Review[]
-  ProductSku  ProductSku[]
 }
 
 model ProductSku {
-  id                  Int                        @id @default(autoincrement())
-  product_id          Int
-  product             Product                    @relation(fields: [product_id], references: [id])
-  size_attribute_id   Int
-  size_attribute      ProductAttribute           @relation("ProductSize", fields: [size_attribute_id], references: [id])
-  color_attribute_id  Int
-  color_attribute     ProductAttribute           @relation("ProductColor", fields: [color_attribute_id], references: [id])
-  sku                 String                     @unique
-  price               Float
-  quantity            Int
-  createdAt           DateTime                   @default(now())
-  photos              ProductPhoto[]
-  orders              ProductOnProductionOrder[]
-  cart_product        CartProduct?
-  ProductOnCategory   ProductOnCategory?         @relation(fields: [productOnCategoryId], references: [id])
-  productOnCategoryId Int?
+  id                 Int                        @id @default(autoincrement())
+  product_id         Int
+  product            ProductOnCategory          @relation(fields: [product_id], references: [id])
+  size_attribute_id  Int
+  size_attribute     ProductAttribute           @relation("ProductSize", fields: [size_attribute_id], references: [id])
+  color_attribute_id Int
+  color_attribute    ProductAttribute           @relation("ProductColor", fields: [color_attribute_id], references: [id])
+  sku                String                     @unique
+  price              Float
+  quantity           Int
+  createdAt          DateTime                   @default(now())
+  photos             ProductPhoto[]
+  orders             ProductOnProductionOrder[]
+  cart_product       CartProduct?
 }
 
 model ProductAttribute {
