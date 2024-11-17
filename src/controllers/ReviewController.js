@@ -1,4 +1,5 @@
 import ReviewService from "../services/ReviewService.js";
+import ResponseDataBuilder from "../models/ResponseData.js";
 
 class ReviewController {
     constructor() {
@@ -6,8 +7,22 @@ class ReviewController {
     }
 
     findAll = async (req, res) => {
-        const reviews = await this.reviewService.find({});
-        res.status(200).json(reviews);
+        const productId = req.query.productId;
+        const query = productId ? { productId: parseInt(productId) } : {};
+      
+        const reviews = await this.reviewService.find(query);
+        const count = await this.reviewService.count(query);
+
+        const data = new ResponseDataBuilder()
+          .setData({
+            reviews,
+            count
+          })
+          .setStatus(200)
+          .setMsg("Reviews found")
+          .build();
+  
+        return res.json(data);
     };
     
     findOne = async (req, res) => {

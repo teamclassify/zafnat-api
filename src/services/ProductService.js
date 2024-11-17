@@ -4,13 +4,17 @@ class ProductService {
   constructor() {}
 
   async find(where, page = 1) {
-    const products = await prisma.productSku.findMany({
+    const products = await prisma.product.findMany({
       where,
       skip: (page - 1) * 10,
       include: {
-        product: true,
-        photos: true,
-      }
+        ProductSku: {
+            include: {
+                photos: true,
+            }
+        },
+        reviews: true
+      },
     });
 
     return products;

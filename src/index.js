@@ -34,7 +34,7 @@ app.use("/api/address", addressRouter);
 app.use("/api/social-media", socialMediaRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/file", fileRouter);
-app.use("/api/review", reviewRouter);
+app.use("/api/reviews", reviewRouter);
 app.use("/api/cart-product", cartProductRouter);
 
 // New routes
