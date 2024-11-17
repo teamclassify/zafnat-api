@@ -1,9 +1,24 @@
 import prisma from "../config/prisma.js";
 
 class ReviewService {
+    async count(where) {
+        const count = await prisma.review.groupBy({
+          by: ["productId"],
+          where,
+          _avg: {
+            rating: true,
+          }
+        });
+    
+        return count;
+    }
+  
     async find(where) {
         const reviews = await prisma.review.findMany({
           where,
+          include: {
+            user: true
+          }
         });
     
         return reviews;
