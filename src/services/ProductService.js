@@ -12,8 +12,9 @@ class ProductService {
             include: {
                 photos: true,
             }
-        }
-      }
+        },
+        reviews: true
+      },
     });
 
     return products;
