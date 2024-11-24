@@ -72,6 +72,18 @@ async function main() {
  } catch (error) {
    console.log("User already exists");
  }
+ 
+  // create category
+  try {
+    await prisma.category.create({
+      data: {
+        name: "Todo",
+        description: "Todos los productos",
+      },
+    });
+  } catch (error) {
+    console.log("Category already exists");
+  }
 }
 
 main()
