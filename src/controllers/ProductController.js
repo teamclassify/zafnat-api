@@ -8,16 +8,21 @@ class ProductController {
 
   findAll = async (req, res) => {
    try {
-     const {status} = req.query;
+     const { status, name } = req.query;
 
      const where = {}
-
-     console.log(req.query)
-
+     
      if (status !== "") {
        where.status = Boolean(status);
      }
-
+     
+      if (name !== "") {
+        where.name = {
+          contains: name,
+          mode: 'insensitive',
+        }
+      }
+      
      const products = await this.productService.find(where);
 
      const data = new ResponseDataBuilder()
