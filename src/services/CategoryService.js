@@ -2,9 +2,16 @@ import prisma from "../config/prisma.js";
 
 class CategoryService {
 
-  async find(where) {
+  async find(where, page = 1) {
     const categories = await prisma.category.findMany({
       where,
+
+      skip: (page - 1) * 10,
+      
+      include: {
+        categories: true,
+        category: true,
+      },
     });
 
     return categories;

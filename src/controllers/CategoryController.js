@@ -8,7 +8,9 @@ class CategoryController {
 
   findAll = async (req, res) => {
     try {
-      const categories = await this.categoryService.find({});
+      const categories = await this.categoryService.find({
+        parent_id: 1
+      });
 
       const data = new ResponseDataBuilder()
         .setData(categories)
