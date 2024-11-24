@@ -7,16 +7,36 @@ class ProductController {
   }
 
   findAll = async (req, res) => {
-    const products = await this.productService.find({
-    });
+   try {
+     const {status} = req.query;
 
-    const data = new ResponseDataBuilder()
-      .setData(products)
-      .setStatus(200)
-      .setMsg("Products found")
-      .build();
+     const where = {}
 
-    return res.json(data);
+     console.log(req.query)
+
+     if (status !== "") {
+       where.status = Boolean(status);
+     }
+
+     const products = await this.productService.find(where);
+
+     const data = new ResponseDataBuilder()
+       .setData(products)
+       .setStatus(200)
+       .setMsg("Products found")
+       .build();
+
+     return res.json(data);
+   } catch (err) {
+     console.log(err);
+     const data = new ResponseDataBuilder()
+       .setData(null)
+       .setStatus(500)
+       .setMsg("Internal server error")
+       .build();
+
+     return res.json(data);
+   }
   };
 
   findOne = async (req, res) => {
