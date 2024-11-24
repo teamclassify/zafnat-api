@@ -84,6 +84,38 @@ async function main() {
   } catch (error) {
     console.log("Category already exists");
   }
+  
+  try {
+   await prisma.productAttribute.create({
+      data: {
+        type: "color",
+        value: "negro",
+      },
+    });
+
+    await prisma.productAttribute.create({
+      data: {
+        type: "color",
+        value: "azul",
+      },
+    });
+
+    await prisma.productAttribute.create({
+      data: {
+        type: "size",
+        value: "XS",
+      },
+    });
+
+    await prisma.productAttribute.create({
+      data: {
+        type: "size",
+        value: "S",
+      },
+    });
+  } catch (error) {
+    console.log("Product attribute already exists");
+  }
 }
 
 main()
