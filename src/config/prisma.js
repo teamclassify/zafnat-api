@@ -4,6 +4,74 @@ const prisma = new PrismaClient();
 
 async function main() {
   // ... you will write your Prisma Client queries here
+  
+  // crate roles
+  await prisma.role.create({
+    data: {
+      name: "admin",
+    },
+  });
+  
+  await prisma.role.create({
+    data: {
+      name: "user",
+    },
+  })
+  
+  await prisma.role.create({
+    data: {
+      name: "sales",
+    },
+  });
+  
+  // create user
+ try {
+   await prisma.user.create({
+     data: {
+       email: "classifycomunicaciones@gmail.com",
+       id: "JHuEHqZIVeV65S6ylMbXybDRlj73",
+       firstName: "Classify",
+       lastName: "Comunicaciones",
+       photo: "",
+       gender: "na",
+     },
+   });
+
+   // create user role
+   await prisma.usersOnRoles.create({
+     data: {
+       role: {
+         connect: {
+           id: 1,
+         },
+       },
+       user: {
+         connect: {
+           id: "JHuEHqZIVeV65S6ylMbXybDRlj73"
+         },
+       },
+       assignedBy: "system",
+     },
+   });
+
+   await prisma.usersOnRoles.create({
+     data: {
+       role: {
+         connect: {
+           id: 2,
+         },
+       },
+       user: {
+         connect: {
+           id: "JHuEHqZIVeV65S6ylMbXybDRlj73"
+         },
+       },
+       assignedBy: "system",
+     },
+   });
+ } catch (error) {
+   console.log("User already exists");
+ }
 }
 
 main()
