@@ -13,6 +13,7 @@ import reviewRouter from "./routes/ReviewRouter.js";
 import cartProductRouter from "./routes/CartProductRouter.js";
 import productsRouter from "./routes/ProductRouter.js";
 import categoriesRouter from "./routes/CategoryRouter.js";
+import attributesRouter from "./routes/AttributeRouter.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/api/address", addressRouter);
 app.use("/api/social-media", socialMediaRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/categories", categoriesRouter);
+app.use("/api/attributes", attributesRouter);
 app.use("/api/file", fileRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/cart-product", cartProductRouter);
