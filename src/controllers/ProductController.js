@@ -8,7 +8,7 @@ class ProductController {
 
   findAll = async (req, res) => {
    try {
-     const { status, name, sizes, colors } = req.query;
+     const { status, name, sizes, colors, categories } = req.query;
 
      const where = {}
      
@@ -23,7 +23,7 @@ class ProductController {
         }
       }
       
-     const products = await this.productService.find(where, 1, colors, sizes);
+     const products = await this.productService.find(where, 1, colors, sizes, categories);
 
      const data = new ResponseDataBuilder()
        .setData(products)
