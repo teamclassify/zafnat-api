@@ -6,23 +6,23 @@ async function main() {
   // ... you will write your Prisma Client queries here
   
   // crate roles
-  await prisma.role.create({
-    data: {
-      name: "admin",
-    },
-  });
-  
-  await prisma.role.create({
-    data: {
-      name: "user",
-    },
-  })
-  
-  await prisma.role.create({
-    data: {
-      name: "sales",
-    },
-  });
+  // await prisma.role.create({
+  //   data: {
+  //     name: "admin",
+  //   },
+  // });
+  //
+  // await prisma.role.create({
+  //   data: {
+  //     name: "user",
+  //   },
+  // })
+  //
+  // await prisma.role.create({
+  //   data: {
+  //     name: "sales",
+  //   },
+  // });
   
   // create user
  try {
