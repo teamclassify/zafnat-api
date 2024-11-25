@@ -77,9 +77,11 @@ model Category {
   id          Int                 @id @default(autoincrement())
   name        String              @unique
   description String?
-  parent_id   Int?
   createdAt   DateTime            @default(now())
   products    ProductOnCategory[]
+  parent_id   Int?
+  category    Category?           @relation("CategoryChildren", fields: [parent_id], references: [id])
+  categories  Category[]          @relation("CategoryChildren")
 }
 
 model ProductOnCategory {
