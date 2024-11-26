@@ -10,21 +10,16 @@ class OrderController {
     }
 
     findAll = async (req, res) => {
-        const orders = await this.orderService.find({
-            include: {
-                user: true,
-                products: true,
-            },
-        });
+        const orders = await this.orderService.find({});
         res.json(orders);
     }
 
     findByUser = async (req, res) => {
         const orders = await this.orderService.find({
-            userId: req.id,
-            include: {
-                user: true,
-                products: true,
+            where: {
+                user: {
+                    id: req.body.user_id,
+                },
             },
         });
         res.json(orders);
@@ -34,7 +29,10 @@ class OrderController {
         if(!req.body.order_items || req.body.order_items.length === 0) {
             return res.status(400).json({ msg: "Order items are required" });
         }
-        const { user_id, status, is_wholesale, order_items } = req.body;
+        if(!req.body.address_id) {
+            return res.status(400).json({ msg: "Address is required" });
+        }
+        const { user_id, address_id, status, is_wholesale, order_items } = req.body;
 
         const validate = await this.validateStock(order_items);
         if(!validate) return res.status(400).json({ msg: "Insufficient stock" });
@@ -44,6 +42,7 @@ class OrderController {
             total += item.price * item.quantity;
         }
         const order = await this.orderService.create({
+            address_id,
             user_id,
             status,
             is_wholesale,

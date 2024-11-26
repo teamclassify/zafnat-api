@@ -53,6 +53,7 @@ model Address {
   city           String
   postal_code    String
   createdAt      DateTime @default(now())
+  orders         Order[]
 }
 
 model ProductionOrder {
@@ -182,6 +183,8 @@ model Order{
   status    String
   createdAt DateTime      @default(now())
   items     OrderItem[]
+  address   Address       @relation(fields: [address_id], references: [id])
+  address_id Int
 }
 
 model OrderItem{
