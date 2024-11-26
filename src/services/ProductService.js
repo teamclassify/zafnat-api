@@ -3,7 +3,7 @@ import prisma from "../config/prisma.js";
 class ProductService {
   constructor() {}
 
-  async find(where, page = 1, colors = [], sizes = []) {
+  async find(where, page = 1, colors = [], sizes = [], categories = []) {
     
     const colorsWhere = colors.length > 0 ? colors.map((color) => {
       return {
@@ -35,11 +35,10 @@ class ProductService {
             photos: true,
           },
 
-          where: {
-            
-          }
+          where: {}
         },
-        reviews: true
+        reviews: true,
+        categories: true,
       },
     }
     
@@ -50,8 +49,6 @@ class ProductService {
     if (sizesWhere.length > 0) {
       filter.push(sizesWhere)
     }
-    
-    console.log(filter)
     
     if (filter.length > 0) {
       // data.include.ProductSku.where.AND = filter;
@@ -65,6 +62,15 @@ class ProductService {
       }
     }
     
+    if (categories.length > 0) {
+      data.where.categories = {
+        some: {
+          name: {
+            in: categories
+          }
+        }
+      }
+    }
     
     const products = await prisma.product.findMany(data);
 

@@ -3,10 +3,25 @@ import prisma from "../config/prisma.js";
 class CartProductService {
 
     async find(where) {
-        const cartProducts = await prisma.cartProduct.findMany({
+        const cartProducts = await prisma.cart.findMany({
             where,
+          
+          include: {
+            products: {
+              include: {
+                product_sku: {
+                  include: {
+                    product: true,
+                    color_attribute: true,
+                    size_attribute: true,
+                    photos: true
+                  }
+                }
+              }
+            }
+          }
         });
-
+        
         return cartProducts;
     }
 
@@ -21,8 +36,35 @@ class CartProductService {
     }
 
     async create(data) {
+      const {
+        productId,
+        userId,
+        quantity
+      } = data;
+      
+        const cart = await prisma.cart.findFirst({
+            where: {
+                userId: userId,
+            },
+          })
+      
         const cartProductCreated = await prisma.cartProduct.create({
-            data,
+            data: {
+              quantity,
+              
+              product_sku: {
+                connect: {
+                  id: productId
+                }
+              },
+              
+              cart: {
+                connect: {
+                  id: cart.id
+                }
+              }
+
+            },
         });
 
         return cartProductCreated;
@@ -32,19 +74,19 @@ class CartProductService {
         const cartProductDeleted = await prisma.cartProduct.delete({
             where: {
                 id: id,
-                cartId: cartId,
             }
         });
         return cartProductDeleted;
     }
 
-    async update(id, cartId, data) {
+    async update(id, userId, quantity) {
         const cartProductUpdated = await prisma.cartProduct.update({
             where: {
                 id: id,
-                cartId: cartId,
             },
-            data,
+            data: {
+                quantity: quantity,
+            },
         });
 
         return cartProductUpdated;

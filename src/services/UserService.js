@@ -55,6 +55,16 @@ class UserService {
         assignedBy: "system",
       },
     });
+    
+    await prisma.cart.create({
+      data: {
+        user: {
+          connect: {
+            id: userCreated.id,
+          },
+        },
+      },
+    })
 
     return userCreated;
   }
