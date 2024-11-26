@@ -47,6 +47,7 @@ model Address {
   userId         String
   user           User     @relation(fields: [userId], references: [id])
   title          String
+  is_main        Boolean  @default(false)
   address_line_1 String
   address_line_2 String?
   country        String
