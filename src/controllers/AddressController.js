@@ -14,9 +14,21 @@ class AddressController {
     };
 
     create = async (req, res) => {
-        const data = req.body;
+        const {
+          address_line_1,
+          country,
+          city,
+          postal_code,
+        } = req.body;
     
-        const address = await this.addressService.create(data);
+        const address = await this.addressService.create({
+          address_line_1,
+          country,
+          city,
+          postal_code,
+          userId: req.id,
+          title: `${city} - ${address_line_1}`,
+        });
     
         res.status(201).json(address);
     };
