@@ -7,8 +7,8 @@ const router = express.Router();
 
 const statsController = new StatsController();
 
-router.get("/orders", verifyToken, checkPermission("ADMIN"), statsController.ordersStats);
-router.get("/products", verifyToken, checkPermission("ADMIN"), statsController.productsStats);
-router.get("/users", verifyToken, checkPermission("ADMIN"), statsController.usersStats);
+router.get("/orders", statsController.ordersStats);
+router.get("/products", statsController.productsStats);
+router.get("/users", statsController.usersStats);
 
 export default router;

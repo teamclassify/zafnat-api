@@ -30,6 +30,7 @@ class StatsService {
     usersFrequency = async () => {
         const usersFrequency = await prisma.user.findMany({
             select: {
+                id: true,
                 firstName: true,
                 email: true,
                 photo: true,
@@ -45,7 +46,51 @@ class StatsService {
                 },
             },
         });
-        return usersFrequency;
+
+        const usersWithTopProducts = await Promise.all(
+            usersFrequency.map(async (user) => {
+                const topProduct = await prisma.orderItem.groupBy({
+                    by: ['product_sku_id'],
+                    where: {
+                        order: {
+                            userId: user.id,
+                        },
+                    },
+                    _sum: {
+                        quantity: true,
+                    },
+                    orderBy: {
+                        _sum: {
+                            quantity: 'desc',
+                        },
+                    },
+                    take: 1,
+                });
+
+                const productDetails =
+                    topProduct.length > 0
+                        ? await prisma.productSku.findUnique({
+                            where: { id: topProduct[0].product_sku_id },
+                            select: {
+                                size_attribute: true,
+                                color_attribute: true,
+                                photos: true,
+                                product: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                            },
+                        })
+                        : null;
+
+                return {
+                    ...user,
+                    topProduct: productDetails || null,
+                };
+            })
+        );
+        return usersWithTopProducts;
     };
 
     usersSales = async () => {
