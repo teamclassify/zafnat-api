@@ -1,16 +1,139 @@
 import prisma from "../config/prisma.js";
 
 class StatsService {
-    ordersStats = async () => {
-        const ordersStats = await prisma.order.aggregate({
-            _count: {
-                id: true,
+
+    orders = async (startYear, startMonth, endYear, endMonth, productIds = []) => {
+
+        const dateFilters = {};
+
+        if (startYear && startMonth && startMonth >= 1 && startMonth <= 12) {
+            const startDate = new Date(`${startYear}-${String(startMonth).padStart(2, '0')}-01T00:00:00Z`);
+            if (!isNaN(startDate.getTime())) {
+                dateFilters.gte = startDate;
+            } else {
+                return "Invalid Date";
+            }
+        }
+
+        if (endYear && endMonth && endMonth >= 1 && endMonth <= 12) {
+            const endDate = new Date(`${(endMonth === 12 ? endYear + 1 : endYear)}-${String((endMonth % 12) + 1).padStart(2, '0')}-01T00:00:00Z`);
+            endDate.setTime(endDate.getTime() - 1);
+            if (!isNaN(endDate.getTime())) {
+                dateFilters.lt = endDate;
+            } else {
+                return "Invalid Date";
+            }
+        }
+
+        const orders = await prisma.order.findMany({
+            where: {
+                createdAt: dateFilters,
+                items: {
+                    some: {
+                        product_sku_id: {
+                            in: productIds.length > 0 ? productIds : undefined,
+                        },
+                    },
+                },
             },
-            _sum: {
-                total: true,
+            select: {
+                createdAt: true,
             },
         });
-        return ordersStats;
+
+
+        const monthlyOrderCount = orders.reduce((months, order) => {
+            const monthKey = `${order.createdAt.getFullYear()}-${String(order.createdAt.getMonth() + 1).padStart(2, '0')}`;
+
+            if (!months[monthKey]) {
+                months[monthKey] = 0;
+            }
+            months[monthKey] += 1;
+
+            return months;
+        }, {});
+
+
+        const monthlyOrderArray = Object.entries(monthlyOrderCount).map(([month, count]) => ({
+            month,
+            count,
+        }));
+
+
+        monthlyOrderArray.sort((a, b) => a.month.localeCompare(b.month));
+
+
+        const totalOrders = monthlyOrderArray.reduce((total, monthData) => total + monthData.count, 0);
+
+        return {
+            totalOrders,
+            monthlyOrders: monthlyOrderArray,
+        };
+    };
+
+    revenue = async (startYear, startMonth, endYear, endMonth, productIds = []) => {
+
+        const dateFilters = {};
+
+        if (startYear && startMonth && startMonth >= 1 && startMonth <= 12) {
+            const startDate = new Date(`${startYear}-${String(startMonth).padStart(2, '0')}-01T00:00:00Z`);
+            if (!isNaN(startDate.getTime())) {
+                dateFilters.gte = startDate;
+            } else {
+                return "Invalid Date";
+            }
+        }
+
+        if (endYear && endMonth && endMonth >= 1 && endMonth <= 12) {
+            const endDate = new Date(`${(endMonth === 12 ? endYear + 1 : endYear)}-${String((endMonth % 12) + 1).padStart(2, '0')}-01T00:00:00Z`);
+            endDate.setTime(endDate.getTime() - 1);
+            if (!isNaN(endDate.getTime())) {
+                dateFilters.lt = endDate;
+            } else {
+                return "Invalid Date";
+            }
+        }
+
+        const orderItems = await prisma.orderItem.findMany({
+            where: {
+                createdAt: dateFilters,
+                product_sku_id: {
+                    in: productIds.length > 0 ? productIds : undefined,
+                },
+            },
+            select: {
+                price: true,
+                quantity: true,
+                createdAt: true,
+            },
+        });
+
+        const totalRevenue = orderItems.reduce((total, item) => {
+            return total + item.price * item.quantity;
+        }, 0);
+
+        const monthlyRevenue = orderItems.reduce((months, item) => {
+            const monthKey = `${item.createdAt.getFullYear()}-${String(item.createdAt.getMonth() + 1).padStart(2, '0')}`;
+
+            if (!months[monthKey]) {
+                months[monthKey] = 0;
+            }
+            months[monthKey] += item.price * item.quantity;
+
+            return months;
+        }, {});
+
+        const monthlyRevenueArray = Object.entries(monthlyRevenue).map(([month, total]) => ({
+            month,
+            total,
+        }));
+
+        monthlyRevenueArray.sort((a, b) => a.month.localeCompare(b.month));
+
+        return {
+            totalRevenue,
+            monthlyRevenue: monthlyRevenueArray,
+        };
     };
 
     soldProducts = async () => {

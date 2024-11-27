@@ -5,8 +5,11 @@ class StatsController {
         this.statsService = new StatsService();
     }
 
-    ordersStats = async (req, res) => {
-        const stats = await this.statsService.ordersStats();
+    salesStats = async (req, res) => {
+        const {startYear, endYear, startMonth, endMonth, productIds} = req.body;
+        const orders = await this.statsService.orders(startYear, startMonth, endYear, endMonth, productIds);
+        const revenue = await this.statsService.revenue(startYear, startMonth, endYear, endMonth, productIds);
+        const stats = {orders, revenue};
         res.json(stats);
     }
 
@@ -18,7 +21,7 @@ class StatsController {
         const worstProducts = await this.statsService.worstProducts();
         const unsoldProducts = await this.statsService.unsoldProducts();
         const stats = {soldProducts, productStock, topCategories, topProducts, worstProducts, unsoldProducts};
-        res.status(201).json(stats);
+        res.json(stats);
     }
 
     usersStats = async (req, res) => {
@@ -27,7 +30,7 @@ class StatsController {
         const userSales = await this.statsService.usersSales();
         const userLocation = await this.statsService.usersLocation();
         const stats = {users, userFrequency, userSales, userLocation};
-        res.status(201).json(stats);
+        res.json(stats);
     }
 }
 
