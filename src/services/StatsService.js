@@ -52,7 +52,17 @@ class StatsService {
     };
 
     topCategories = async () => {
-        
+        const topCategories = await prisma.$queryRaw`
+            SELECT c.id, c.name, SUM(oi.price * oi.quantity) AS total_sales
+            FROM "Category" c
+            JOIN "ProductOnCategory" pc ON c.id = pc.category_id
+            JOIN "Product" p ON pc.product_id = p.id
+            JOIN "ProductSku" ps ON p.id = ps.product_id
+            JOIN "OrderItem" oi ON ps.id = oi.product_sku_id
+            GROUP BY c.id, c.name
+            ORDER BY total_sales DESC;
+          `;
+        return topCategories;
     };
 
     topProducts = async () => {
