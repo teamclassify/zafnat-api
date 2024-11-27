@@ -13,13 +13,160 @@ class StatsService {
         return ordersStats;
     };
 
-    productsStats = async () => {
-        const productsStats = await prisma.product.aggregate({
-            _count: {
-                id: true,
+    soldProducts = async () => {
+        const soldProducts = await prisma.orderItem.aggregate({
+            _sum: {
+                quantity: true,
             },
         });
-        return productsStats;
+        return soldProducts;
+    };
+
+    productStock = async () => {
+        const productStock = await prisma.productSku.findMany({
+            select: {
+                product: {
+                    select: {
+                        name: true,
+                    }
+                },
+                size_attribute: {
+                    select: {
+                        value: true,
+                    }
+                },
+                color_attribute: {
+                    select: {
+                        value: true,
+                    }
+                },
+                photos: {
+                    select: {
+                        value: true,
+                    }
+                },
+                quantity: true,
+            },
+        });
+        return productStock;
+    };
+
+    topCategories = async () => {
+        
+    };
+
+    topProducts = async () => {
+        const topProducts = await prisma.orderItem.groupBy({
+            by: ['product_sku_id'],
+            _sum: {
+                quantity: true,
+            },
+            orderBy: {
+                _sum: {
+                    quantity: 'desc',
+                },
+            },
+            take: 5,
+        });
+
+        const productsDetails = await Promise.all(
+            topProducts.map(async (product) => {
+                const productDetails = await prisma.productSku.findUnique({
+                    where: { id: product.product_sku_id },
+                    select: {
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        },
+                        size_attribute: {
+                            select: {
+                                value: true,
+                            }
+                        },
+                        color_attribute: {
+                            select: {
+                                value: true,
+                            }
+                        },
+                    },
+                });
+                return { product, productDetails };
+            })
+        );
+        return productsDetails;
+    };
+
+    worstProducts = async () => {
+        const worstProducts = await prisma.orderItem.groupBy({
+            by: ['product_sku_id'],
+            _sum: {
+                quantity: true,
+            },
+            orderBy: {
+                _sum: {
+                    quantity: 'asc',
+                },
+            },
+            take: 5,
+        });
+
+        const productsDetails = await Promise.all(
+            worstProducts.map(async (product) => {
+                const productDetails = await prisma.productSku.findUnique({
+                    where: { id: product.product_sku_id },
+                    select: {
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        },
+                        size_attribute: {
+                            select: {
+                                value: true,
+                            }
+                        },
+                        color_attribute: {
+                            select: {
+                                value: true,
+                            }
+                        },
+                    },
+                });
+                return { product, productDetails };
+            })
+        );
+        return productsDetails;
+    };
+
+    unsoldProducts = async () => {
+        const unsoldProducts = await prisma.productSku.findMany({
+            where: {
+                order_items: {
+                    none: {},
+                },
+            },
+            select: {
+                product: {
+                    select: {
+                        name: true,
+                    }
+                },
+                size_attribute: {
+                    select: {
+                        value: true,
+                    }
+                },
+                color_attribute: {
+                    select: {
+                        value: true,
+                    }
+                },
+            },
+        });
+        return unsoldProducts;
     };
 
     usersTotal = async () => {

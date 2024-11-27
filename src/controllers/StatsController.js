@@ -11,16 +11,23 @@ class StatsController {
     }
 
     productsStats = async (req, res) => {
-        const stats = await this.statsService.productsStats();
-        res.json(stats);
+        const soldProducts = await this.statsService.soldProducts();
+        const productStock = await this.statsService.productStock();
+        const topCategories = await this.statsService.topCategories();
+        const topProducts = await this.statsService.topProducts();
+        const worstProducts = await this.statsService.worstProducts();
+        const unsoldProducts = await this.statsService.unsoldProducts();
+        const stats = {soldProducts, productStock, topCategories, topProducts, worstProducts, unsoldProducts};
+        res.status(201).json(stats);
     }
 
     usersStats = async (req, res) => {
         const users = await this.statsService.usersTotal();
-        const usersFrequency = await this.statsService.usersFrequency();
+        const userFrequency = await this.statsService.usersFrequency();
         const userSales = await this.statsService.usersSales();
-        const usersLocation = await this.statsService.usersLocation();
-        res.status(201).json({users, usersFrequency, userSales, usersLocation});
+        const userLocation = await this.statsService.usersLocation();
+        const stats = {users, userFrequency, userSales, userLocation};
+        res.status(201).json(stats);
     }
 }
 
