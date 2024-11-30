@@ -16,6 +16,7 @@ import categoriesRouter from "./routes/CategoryRouter.js";
 import attributesRouter from "./routes/AttributeRouter.js";
 import recomendacionesRouter from "./routes/RecomendacionesRouter.js";
 import orderRouter from "./routes/OrderRouter.js";
+import statsRouter from "./routes/StatsRouter.js";
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/cart-product", cartProductRouter);
 app.use("/api/recomendaciones", recomendacionesRouter);
 app.use("/api/orders", orderRouter); 
+app.use("/api/stats", statsRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
