@@ -8,9 +8,36 @@ class ReviewController {
 
     findAll = async (req, res) => {
         const productId = req.query.productId;
+        const userId = req.query.userId;
+        const filters = req.query.filters;
+        
         const query = productId ? { productId: parseInt(productId) } : {};
+        const orderBy = {};
+        
+        if (userId) {
+            query.userId = userId
+        }
+        
+        if (filters) {
+            switch (filters) {
+              case "highestRating":
+                orderBy.rating = "desc"
+                break;  
+              case "lowestRating":
+                orderBy.rating = "asc"
+                break;
+                case "mostRecent":
+                  orderBy.createdAt = "desc"
+                break;
+              case "oldest":
+                orderBy.createdAt = "asc"
+                break;
+              default:  
+                break;
+            }
+        }
       
-        const reviews = await this.reviewService.find(query);
+        const reviews = await this.reviewService.find(query, orderBy);
         const count = await this.reviewService.count(query);
 
         const data = new ResponseDataBuilder()

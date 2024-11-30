@@ -13,11 +13,13 @@ class ReviewService {
         return count;
     }
   
-    async find(where) {
+    async find(where, orderBy) {
         const reviews = await prisma.review.findMany({
           where,
+          orderBy,
           include: {
-            user: true
+            user: true,
+            product: true,
           }
         });
     
