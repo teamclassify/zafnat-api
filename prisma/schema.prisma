@@ -28,6 +28,7 @@ model User {
   reviews          Review[]
   productionOrders ProductionOrder[]
   cart             Cart?
+  orders           Order[]
 }
 
 model UsersOnRoles {
@@ -52,6 +53,7 @@ model Address {
   city           String
   postal_code    String
   createdAt      DateTime @default(now())
+  orders         Order[]
 }
 
 model ProductionOrder {
@@ -119,6 +121,7 @@ model ProductSku {
   photos             ProductPhoto[]
   orders             ProductOnProductionOrder[]
   cart_product       CartProduct?
+  order_items        OrderItem[]
 }
 
 model ProductAttribute {
@@ -169,4 +172,28 @@ model CartProduct {
   cart           Cart       @relation(fields: [cart_id], references: [id])
   cart_id        Int
   quantity       Int
+}
+
+model Order{
+  id        Int           @id @default(autoincrement())
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  total     Float
+  is_wholesale Boolean
+  status    String
+  createdAt DateTime      @default(now())
+  items     OrderItem[]
+  address   Address       @relation(fields: [address_id], references: [id])
+  address_id Int
+}
+
+model OrderItem{
+  id          Int        @id @default(autoincrement())
+  order_id    Int
+  order       Order      @relation(fields: [order_id], references: [id])
+  product_sku ProductSku @relation(fields: [product_sku_id], references: [id])
+  product_sku_id Int
+  quantity    Int
+  price       Float
+  createdAt   DateTime   @default(now())
 }

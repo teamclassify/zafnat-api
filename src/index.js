@@ -15,6 +15,7 @@ import productsRouter from "./routes/ProductRouter.js";
 import categoriesRouter from "./routes/CategoryRouter.js";
 import attributesRouter from "./routes/AttributeRouter.js";
 import recomendacionesRouter from "./routes/RecomendacionesRouter.js";
+import orderRouter from "./routes/OrderRouter.js";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/api/file", fileRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/cart-product", cartProductRouter);
 app.use("/api/recomendaciones", recomendacionesRouter);
+app.use("/api/orders", orderRouter); 
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";
