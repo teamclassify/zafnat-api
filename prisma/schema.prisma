@@ -16,6 +16,7 @@ model Role {
 model User {
   id               String            @id
   email            String            @unique
+  cc               String?           @unique
   firstName        String?
   lastName         String?
   phone            String?
