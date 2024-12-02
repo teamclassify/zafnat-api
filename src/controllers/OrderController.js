@@ -114,7 +114,7 @@ class OrderController {
 
           let ordered_items = [];
           for (const item of order_items) {
-            await this.productSkuService.decreaseStock(item.id, item.quantity);
+            // await this.productSkuService.decreaseStock(item.id, item.quantity);
             ordered_items.push(await this.orderItemService.create({
               product_sku_id: item.product_sku_id,
               order_id: order.id,
