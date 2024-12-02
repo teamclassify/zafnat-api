@@ -6,6 +6,8 @@ const PAGINATION_LIMIT = 10;
 const PORT = process.env.PORT || 8080;
 const MODE = process.env.MODE || "dev";
 const MERCADOPAGO = process.env.MERCADOPAGO || "test";
+const URL_FRONT = process.env.URL_FRONT
+const URL_BACK = process.env.URL_BACK
 
 const EMAIL = {
   HOST: process.env.EMAIL_SMPT_HOST,
@@ -31,4 +33,4 @@ const FIREBASE = {
   universe_domain: "googleapis.com",
 };
 
-export { EMAIL, FIREBASE, MODE, PAGINATION_LIMIT, PORT, MERCADOPAGO };
+export { EMAIL, FIREBASE, MODE, PAGINATION_LIMIT, PORT, MERCADOPAGO, URL_FRONT, URL_BACK };

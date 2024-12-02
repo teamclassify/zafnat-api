@@ -7,6 +7,7 @@ class OrderService {
             select: {
                 id: true,
                 status: true,
+                createdAt: true,
                 is_wholesale: true,
                 total: true,
                 user: {
