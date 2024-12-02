@@ -4,4 +4,4 @@ import {MERCADOPAGO} from "./index.js";
 // Agrega credenciales
 const client = new MercadoPagoConfig({ accessToken: MERCADOPAGO });
 
-module.exports = client;
+export default client;
