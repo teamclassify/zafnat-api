@@ -1,11 +1,9 @@
 import prisma from "../config/prisma.js";
 
 class AttributeService {
-
   async find(where, page = 1) {
     const results = await prisma.productAttribute.findMany({
-      where,
-      skip: (page - 1) * 10,
+      where
     });
 
     return results;
@@ -33,7 +31,7 @@ class AttributeService {
     const deleted = await prisma.productAttribute.delete({
       where: {
         id: id,
-      }
+      },
     });
     return deleted;
   }
