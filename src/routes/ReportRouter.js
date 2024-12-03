@@ -6,6 +6,7 @@ import checkPermission from '../middlewares/rbac.js';
 const router = express.Router();
 const reportController = new ReportController();
 
-router.get('/sales', reportController.salesReport);
+router.get('/sales', verifyToken, checkPermission("ADMIN"), reportController.salesReport);
+router.get('/invoices', verifyToken, checkPermission("ADMIN"), reportController.invoicesReport);
 
 export default router;

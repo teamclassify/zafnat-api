@@ -19,6 +19,7 @@ import orderRouter from "./routes/OrderRouter.js";
 import statsRouter from "./routes/StatsRouter.js";
 import reportRouter from "./routes/ReportRouter.js";
 import { report } from "process";
+import invoiceRouter from "./routes/InvoiceRouter.js";
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use("/api/recomendaciones", recomendacionesRouter);
 app.use("/api/orders", orderRouter); 
 app.use("/api/stats", statsRouter);
 app.use("/api/reports", reportRouter);
+app.use("/api/invoices", invoiceRouter);
 
 // New routes
 // import nameRouter from "./routes/NameRouter.js";

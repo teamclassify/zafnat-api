@@ -16,6 +16,7 @@ model Role {
 model User {
   id               String            @id
   email            String            @unique
+  cc               String?           @unique
   firstName        String?
   lastName         String?
   phone            String?
@@ -186,6 +187,7 @@ model Order {
   items        OrderItem[]
   address      Address     @relation(fields: [address_id], references: [id])
   address_id   Int
+  Invoice      Invoice?
 }
 
 model OrderItem {
@@ -197,4 +199,15 @@ model OrderItem {
   quantity       Int
   price          Float
   createdAt      DateTime   @default(now())
+}
+
+model Invoice {
+  id             Int      @id @default(autoincrement())
+  order_id       Int      @unique
+  transaction_id String
+  status         String   @default("pending")
+  bank           String?
+  order          Order    @relation(fields: [order_id], references: [id])
+  amount         Float
+  createdAt      DateTime @default(now())
 }

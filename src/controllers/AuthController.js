@@ -33,7 +33,7 @@ class AuthController {
         .setStatus(200)
         .setMsg("User found")
         .build();
-
+      
       res.json(data);
     } else {
       // create user in db and return it
@@ -45,6 +45,7 @@ class AuthController {
         photo: req.body.photo ?? null,
         phone: req.body.phone ?? null,
         gender: "na",
+        cc: req.body.cc ?? null,
       });
 
       const data = new ResponseDataBuilder()

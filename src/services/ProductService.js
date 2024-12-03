@@ -84,7 +84,11 @@ class ProductService {
           product_id: parseInt(id),
         },
         include: {
-          product: true,
+          product: {
+            include: {
+              categories: true,
+            }
+          },
           photos: true,
           color_attribute: true,
           size_attribute: true,
