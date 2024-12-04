@@ -68,6 +68,10 @@ class FileController {
 
     getOrder(data){
         let order;
+        // console.log("===================")
+        // console.log(data)
+        // console.log("===================")
+
         for(let row in data) {
             order = data[row].production_id;
             break;
