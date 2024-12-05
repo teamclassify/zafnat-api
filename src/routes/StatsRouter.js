@@ -7,7 +7,7 @@ const router = express.Router();
 
 const statsController = new StatsController();
 
-router.get("/sales", verifyToken, checkPermission("ADMIN"), statsController.salesStats);
+router.get("/sales", statsController.salesStats);
 router.get("/products", verifyToken, checkPermission("ADMIN"), statsController.productsStats);
 router.get("/users", verifyToken, checkPermission("ADMIN"), statsController.usersStats);
 

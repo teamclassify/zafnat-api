@@ -1,3 +1,4 @@
+import { get } from "http";
 import prisma from "../config/prisma.js";
 
 class StatsService {
@@ -25,22 +26,7 @@ class StatsService {
             }
         }
 
-        const orders = await prisma.order.findMany({
-            where: {
-                createdAt: dateFilters,
-                items: {
-                    some: {
-                        product_sku_id: {
-                            in: productIds.length > 0 ? productIds : undefined,
-                        },
-                    },
-                },
-            },
-            select: {
-                createdAt: true,
-            },
-        });
-
+        const orders = await this.getOrders(dateFilters, productIds);
 
         const monthlyOrderCount = orders.reduce((months, order) => {
             const monthKey = `${order.createdAt.getFullYear()}-${String(order.createdAt.getMonth() + 1).padStart(2, '0')}`;
@@ -53,22 +39,47 @@ class StatsService {
             return months;
         }, {});
 
-
         const monthlyOrderArray = Object.entries(monthlyOrderCount).map(([month, count]) => ({
             month,
             count,
         }));
 
-
         monthlyOrderArray.sort((a, b) => a.month.localeCompare(b.month));
-
 
         const totalOrders = monthlyOrderArray.reduce((total, monthData) => total + monthData.count, 0);
 
         return {
             totalOrders,
             monthlyOrders: monthlyOrderArray,
+            orders,
         };
+    };
+
+    getOrders = async (dateFilters, productIds = []) => {
+        const orders = await prisma.order.findMany({
+            where: {
+                createdAt: dateFilters,
+                items: {
+                    some: {
+                        product_sku_id: {
+                            in: productIds.length > 0 ? productIds : undefined,
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+                total: true,
+                createdAt: true,
+                user: {
+                    select: {
+                        firstName: true,
+                        email: true,
+                    }
+                }
+            },
+        });
+        return orders;
     };
 
     revenue = async (startYear, startMonth, endYear, endMonth, productIds = []) => {
@@ -94,19 +105,7 @@ class StatsService {
             }
         }
 
-        const orderItems = await prisma.orderItem.findMany({
-            where: {
-                createdAt: dateFilters,
-                product_sku_id: {
-                    in: productIds.length > 0 ? productIds : undefined,
-                },
-            },
-            select: {
-                price: true,
-                quantity: true,
-                createdAt: true,
-            },
-        });
+        const orderItems = await this.getOrderItems(dateFilters, productIds);
 
         const totalRevenue = orderItems.reduce((total, item) => {
             return total + item.price * item.quantity;
@@ -133,7 +132,44 @@ class StatsService {
         return {
             totalRevenue,
             monthlyRevenue: monthlyRevenueArray,
+            orderItems,
         };
+    };
+
+    getOrderItems = async (dateFilters, productIds = []) => {
+        const orderItems = await prisma.orderItem.findMany({
+            where: {
+                createdAt: dateFilters,
+                product_sku_id: {
+                    in: productIds.length > 0 ? productIds : undefined,
+                },
+            },
+            select: {
+                price: true,
+                quantity: true,
+                createdAt: true,
+                product_sku: {
+                    select: {
+                        product: {
+                            select: {
+                                name: true,
+                            }
+                        },
+                        size_attribute: {
+                            select: {
+                                value: true,
+                            }
+                        },
+                        color_attribute: {
+                            select: {
+                                value: true,
+                            }
+                        },
+                    },
+                }
+            },
+        });
+        return orderItems;
     };
 
     soldProducts = async () => {
